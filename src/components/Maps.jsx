@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { dataSekolah } from "@/lib/data";
+import styles from "@/style/maps.module.css"; // Import the CSS module
 
 const greenIcon = new L.Icon({
   iconUrl: "/marker-blue.png",
@@ -40,12 +41,16 @@ const Maps = () => {
   };
 
   return (
-    <div className="flex h-full w-full">
-      <div className="">
+    <div
+      className={`${styles.mapContainer} ${
+        selectedMarker ? styles.withInfo : ""
+      }`}
+    >
+      <div className={styles.map}>
         <MapContainer
           center={[-8.1, 112.3]}
           zoom={11}
-          style={{ height: "750px", width: "100%" }}
+          style={{ height: "720px", width: "100%" }}
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -67,23 +72,32 @@ const Maps = () => {
             >
               {showPopup && (
                 <Popup>
-                  <div>
-                    <h2>{sekolah.name}</h2>
-                    <p>
-                      <strong>Alamat:</strong> {sekolah.address}
-                    </p>
-                    <p>
-                      <strong>Akreditasi:</strong> {sekolah.accreditation}
-                    </p>
-                    <p>
-                      <strong>Jumlah Siswa:</strong> {sekolah.total.student}
-                    </p>
-                    <p>
-                      <strong>Jumlah Guru:</strong> {sekolah.total.teacher}
-                    </p>
-                    <p>
-                      <strong>Luas Area:</strong> {sekolah.total.area}
-                    </p>
+                  <div
+                    style={{
+                      maxWidth: "200px",
+                      overflow: "hidden",
+                      // padding: '16px',
+                    }}
+                  >
+                    <img
+                      src={sekolah.image}
+                      alt={sekolah.name}
+                      style={{
+                        width: "300px",
+                        height: "150px",
+                        objectFit: "cover",
+                        marginBottom: "8px",
+                      }}
+                    />
+                    <h3
+                      style={{
+                        fontSize: "16px",
+                        fontWeight: "bold",
+                        margin: "0",
+                      }}
+                    >
+                      {sekolah.name}
+                    </h3>
                   </div>
                 </Popup>
               )}
@@ -91,19 +105,38 @@ const Maps = () => {
           ))}
         </MapContainer>
       </div>
-      <div className="">
-        {selectedMarker && (
-          <div>
-            <h3>Informasi Sekolah Terpilih:</h3>
-            <p>Nama: {selectedMarker.name}</p>
-            <p>Alamat: {selectedMarker.address}</p>
-            <p>Akreditasi: {selectedMarker.accreditation}</p>
-            <p>Jumlah Siswa: {selectedMarker.total.student}</p>
-            <p>Jumlah Guru: {selectedMarker.total.teacher}</p>
-            <p>Luas Area: {selectedMarker.total.area}</p>
+      {selectedMarker && (
+        <div className={styles.info}>
+          <div style={{ marginTop: "20px" }}>
+            <img
+              src={selectedMarker.image}
+              style={{
+                width: "100%",
+                height: "200px",
+                objectFit: "cover",
+                borderRadius: "8px",
+                marginBottom: "8px",
+              }}
+              alt=""
+            />
+            <h3 style={{ fontSize: "24px", fontWeight: "bold", margin: "0" }}>
+              {selectedMarker.name}
+            </h3>
+            <p style={{ fontSize: "16px", fontWeight: "bold", margin: "" }}>
+              Alamat:{" "}
+            </p>
+            <p style={{ fontSize: "16px", fontWeight: "normal", margin: "0" }}>
+              {selectedMarker.address}
+            </p>
+            <div style={{ marginTop: "8px" }}>
+              <p>Akreditasi: {selectedMarker.accreditation}</p>
+              <p>Jumlah Siswa: {selectedMarker.total.student}</p>
+              <p>Jumlah Guru: {selectedMarker.total.teacher}</p>
+              <p>Luas Area: {selectedMarker.total.area}</p>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
