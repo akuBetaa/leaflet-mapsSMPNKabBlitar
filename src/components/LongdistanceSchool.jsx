@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { MapContainer, TileLayer, Marker } from 'react-leaflet';
-import { dataSekolah } from '@/lib/data'; // Mengimpor data sekolah (disesuaikan dengan struktur folder Anda)
-import { haversineDistance } from '@/lib/haversine'; // Mengimpor fungsi haversineDistance (disesuaikan dengan struktur folder Anda)
+import { dataSekolah } from '@/lib/data'; 
+import { haversineDistance } from '@/lib/haversine';
+import { Input } from '@/components/ui/input';
+import { FormField , Form, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 
 const LongdistanceSchool = () => {
-  const [markerPosition, setMarkerPosition] = useState([-8.101820370932009, 112.27687703867429]); // Koordinat default
+  const [markerPosition, setMarkerPosition] = useState([-8.101820370932009, 112.27687703867429]); // Default coordinates
   const [formState, setFormState] = useState({
     studentName: '',
     latitude: '-8.101820370932009',
@@ -13,7 +15,6 @@ const LongdistanceSchool = () => {
   const [distances, setDistances] = useState([]);
   const [recommendation, setRecommendation] = useState('');
 
-  // Fungsi untuk menghitung jarak dari semua sekolah ke markerPosition dan menentukan rekomendasi
   const calculateDistances = () => {
     const updatedDistances = dataSekolah.map((sekolah) => {
       const { latitude, longitude } = sekolah.coordinate;
@@ -21,21 +22,17 @@ const LongdistanceSchool = () => {
       return {
         id: sekolah.id,
         name: sekolah.name,
-        distance: distance.toFixed(2), // Jarak diambil dua angka desimal
+        distance: distance.toFixed(2),
       };
     });
 
-    // Mengurutkan distances berdasarkan jarak terdekat ke terjauh
     updatedDistances.sort((a, b) => parseFloat(a.distance) - parseFloat(b.distance));
-
-    // Memotong agar hanya 12 jarak terdekat yang ditampilkan
-    const nearestDistances = updatedDistances.slice(0, 12);
+    const nearestDistances = updatedDistances.slice(0, 5);
 
     setDistances(nearestDistances);
 
-    // Menetapkan rekomendasi berdasarkan sekolah terdekat
-    const nearestSchool = nearestDistances[0]; // Ambil sekolah terdekat
-    setRecommendation(`Hai <strong>${formState.studentName}</strong>! Berikut rekomendasi pemilihan sekolah berdasarkan jarak untukmu: ${nearestSchool.name}`);
+    const nearestSchool = nearestDistances[0];
+    setRecommendation(`Hai <strong>${formState.studentName}</strong>! <br> Rekomendasi sekolah terdekat untukmu: ${nearestSchool.name}`);
   };
 
   const handleClick = (e) => {
@@ -62,10 +59,9 @@ const LongdistanceSchool = () => {
   };
 
   return (
-    <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start' }}>
-      {/* Peta di sebelah kiri */}
-      <div style={{ flex: '2', borderRight: '1px solid #ccc', paddingRight: '20px' }}>
-        <MapContainer center={[-8.101820370932009, 112.27687703867429]} zoom={13} style={{ height: '750px' }} onClick={handleClick}>
+    <div className="flex flex-col md:flex-row gap-5 items-center px-5 md:px-20">
+      <div className="flex-1 flex-col flex items-center justify-center pt-5">
+        <MapContainer center={[-8.101820370932009, 112.27687703867429]} zoom={13} className="h-[300px] w-[100%] md:h-[500px] rounded-2xl" onClick={handleClick}>
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -82,64 +78,64 @@ const LongdistanceSchool = () => {
             },
           }} />
         </MapContainer>
+        <div className=''>
+          <p className='text-sm pt-2'>Note : Pindah titik diatas berdasarkan lokasi rumahmu</p>
+        </div>
       </div>
 
-      {/* Form di sebelah kanan */}
-      <div style={{ flex: '1', padding: '20px', backgroundColor: '#f0f0f0', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
-        <form onSubmit={handleCalculate} style={{ marginBottom: '20px' }}>
-          <label style={{ marginBottom: '10px', display: 'block' }}>
+      <div className="flex-1 p-5 rounded md:min-h-[550px]">
+        <div>
+          <h3 className="text-xl font-bold mb-3">Form Pemilihan Sekolah</h3>
+        </div>
+        <form onSubmit={handleCalculate} className="mb-5">
+          <label className="block mb-2">
             Nama Siswa:
             <input
               type="text"
               name="studentName"
               value={formState.studentName}
               onChange={handleInputChange}
-              style={{ marginLeft: '10px', padding: '5px', borderRadius: '3px', border: '1px solid #ccc', width: '100%' }}
+              className="ml-2 p-2 rounded border border-gray-300 w-full"
             />
           </label>
-          <br />
-          <label style={{ marginBottom: '10px', display: 'block' }}>
+          <label className="block mb-2">
             Latitude:
             <input
               type="text"
               name="latitude"
               value={formState.latitude}
               readOnly
-              style={{ marginLeft: '10px', padding: '5px', borderRadius: '3px', border: '1px solid #ccc', width: '100%' }}
+              className="ml-2 p-2 rounded border border-gray-300 w-full"
             />
           </label>
-          <br />
-          <label style={{ marginBottom: '10px', display: 'block' }}>
+          <label className="block mb-2">
             Longitude:
             <input
               type="text"
               name="longitude"
               value={formState.longitude}
               readOnly
-              style={{ marginLeft: '10px', padding: '5px', borderRadius: '3px', border: '1px solid #ccc', width: '100%' }}
+              className="ml-2 p-2 rounded border border-gray-300 w-full"
             />
           </label>
-          <br />
-          <button type="submit" style={{ padding: '8px 16px', backgroundColor: '#3182CE', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', width: '100%' }}>Hitung Jarak</button>
+          <button type="submit" className="p-2 bg-blue-500 text-white rounded w-full mt-2">Hitung Jarak</button>
         </form>
 
         {distances.length > 0 && (
-          <div style={{ padding: '20px', backgroundColor: '#f9f9f9', borderRadius: '5px', boxShadow: '0 2px 4px rgba(0,0,0,0.1)' }}>
+          <div className="">
             {recommendation && (
-              <p style={{ marginBottom: '10px', fontWeight: 'bold' }} dangerouslySetInnerHTML={{ __html: recommendation }} />
+              <p className="mb-2 font-bold" dangerouslySetInnerHTML={{ __html: recommendation }} />
             )}
-            <p style={{ fontWeight: 'bold' }}>12 Jarak Terdekat:</p>
-            <ol style={{ paddingLeft: '20px' }}>
+            <p className="font-bold">Sekolah Jarak Terdekat:</p>
+            <ol className="pl-5 list-decimal">
               {distances.map((item) => (
-                <li key={item.id} style={{ marginBottom: '5px' }}>
+                <li key={item.id} className="mb-1">
                   {item.name}: {item.distance} km
                 </li>
               ))}
             </ol>
           </div>
         )}
-
-        
       </div>
     </div>
   );

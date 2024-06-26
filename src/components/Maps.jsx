@@ -3,7 +3,6 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { dataSekolah } from "@/lib/data";
-import styles from "@/style/maps.module.css"; // Import the CSS module
 
 const greenIcon = new L.Icon({
   iconUrl: "/marker-blue.png",
@@ -41,16 +40,12 @@ const Maps = () => {
   };
 
   return (
-    <div
-      className={`${styles.mapContainer} ${
-        selectedMarker ? styles.withInfo : ""
-      }`}
-    >
-      <div className={styles.map}>
+    <div className="flex flex-col md:flex-row justify-center items-start gap-5 px-5 py-5">
+      <div className="flex-1 md:flex-[3]">
         <MapContainer
           center={[-8.1, 112.3]}
           zoom={11}
-          style={{ height: "720px", width: "100%" }}
+          className="h-screen w-[100%] md:h-[500px] rounded-2xl"
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -72,32 +67,14 @@ const Maps = () => {
             >
               {showPopup && (
                 <Popup>
-                  <div
-                    style={{
-                      maxWidth: "200px",
-                      overflow: "hidden",
-                      // padding: '16px',
-                    }}
-                  >
+                  <div className="max-w-xs overflow-hidden">
                     <img
                       src={sekolah.image}
                       alt={sekolah.name}
-                      style={{
-                        width: "300px",
-                        height: "150px",
-                        objectFit: "cover",
-                        marginBottom: "8px",
-                      }}
+                      className="w-full h-36 object-cover mb-2"
                     />
-                    <h3
-                      style={{
-                        fontSize: "16px",
-                        fontWeight: "bold",
-                        margin: "0",
-                      }}
-                    >
-                      {sekolah.name}
-                    </h3>
+                    <h3 className="text-lg font-bold m-0 p-0">{sekolah.name}</h3>
+                    <p className="p-0 m-0">{sekolah.coordinate.latitude}, {sekolah.coordinate.longitude}</p>
                   </div>
                 </Popup>
               )}
@@ -106,33 +83,53 @@ const Maps = () => {
         </MapContainer>
       </div>
       {selectedMarker && (
-        <div className={styles.info}>
-          <div style={{ marginTop: "20px" }}>
+        <div className="flex-1 md:w-96 p-4 shadow-lg border border-border rounded-xl">
+          <div className="mt-3">
             <img
               src={selectedMarker.image}
-              style={{
-                width: "100%",
-                height: "200px",
-                objectFit: "cover",
-                borderRadius: "8px",
-                marginBottom: "8px",
-              }}
-              alt=""
+              className="w-full h-48 object-cover rounded-md mb-2"
+              alt={selectedMarker.name}
             />
-            <h3 style={{ fontSize: "24px", fontWeight: "bold", margin: "0" }}>
-              {selectedMarker.name}
-            </h3>
-            <p style={{ fontSize: "16px", fontWeight: "bold", margin: "" }}>
-              Alamat:{" "}
-            </p>
-            <p style={{ fontSize: "16px", fontWeight: "normal", margin: "0" }}>
-              {selectedMarker.address}
-            </p>
-            <div style={{ marginTop: "8px" }}>
-              <p>Akreditasi: {selectedMarker.accreditation}</p>
-              <p>Jumlah Siswa: {selectedMarker.total.student}</p>
-              <p>Jumlah Guru: {selectedMarker.total.teacher}</p>
-              <p>Luas Area: {selectedMarker.total.area}</p>
+            <h3 className="text-xl font-bold m-0">{selectedMarker.name}</h3>
+            <p className="text-lg font-bold mt-2">Alamat:</p>
+            <p className="text-base font-normal m-0">{selectedMarker.address}</p>
+            <div className="mt-2">
+              <table className="min-w-full">
+                <tbody className="bg-white">
+                  <tr>
+                    <td className=" py-1 font-medium text-gray-900 whitespace-nowrap">
+                      Akreditasi
+                    </td>
+                    <td className="py-1 text-gray-700 whitespace-nowrap">
+                      {selectedMarker.accreditation}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 font-medium text-gray-900 whitespace-nowrap">
+                      Jumlah Siswa
+                    </td>
+                    <td className="py-1 text-gray-700 whitespace-nowrap">
+                      {selectedMarker.total.student}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 font-medium text-gray-900 whitespace-nowrap">
+                      Jumlah Guru
+                    </td>
+                    <td className="py-1 text-gray-700 whitespace-nowrap">
+                      {selectedMarker.total.teacher}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="py-1 font-medium text-gray-900 whitespace-nowrap">
+                      Luas Area
+                    </td>
+                    <td className="py-1 text-gray-700 whitespace-nowrap">
+                      {selectedMarker.total.area}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
