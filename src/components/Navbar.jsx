@@ -18,7 +18,7 @@ const Navbar = () => {
       </div>
       
       {/* Navigation Links */}
-      <div className="flex justify-between md:w-auto">
+      <div className="flex justify-between gap-5">
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>

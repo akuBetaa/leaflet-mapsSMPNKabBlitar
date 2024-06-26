@@ -45,11 +45,11 @@ const Maps = () => {
         <MapContainer
           center={[-8.1, 112.3]}
           zoom={11}
-          className="h-screen w-[100%] md:h-[500px] rounded-2xl"
+          className="h-[300px] w-[100%] md:h-[500px] rounded-2xl"
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="https://github.com/akuBetaa/">AkuBetaa</a> contributors'
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           {dataSekolah.map((sekolah, index) => (
             <Marker
