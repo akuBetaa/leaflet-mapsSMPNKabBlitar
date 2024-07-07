@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -28,6 +28,13 @@ const Maps = () => {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
   const markersRef = useRef([]);
+  const mapRef = useRef();
+
+  useEffect(() => {
+    if (mapRef.current) {
+      mapRef.current.invalidateSize();
+    }
+  }, []);
 
   const handleMarkerMouseOver = (index) => {
     markersRef.current[index].openPopup();
@@ -40,17 +47,19 @@ const Maps = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row justify-center items-start gap-5 px-5 py-5">
+    <div className="flex flex-col md:flex-row justify-center items-start gap-5 px-5 pt-5">
       <div className="flex-1 md:flex-[3]">
         <MapContainer
           center={[-8.1, 112.3]}
           zoom={11}
-          className="h-[300px] w-[100%] md:h-[500px] rounded-2xl"
+          className="h-[300px] w-full md:h-[500px] rounded-2xl"
+          ref={mapRef}
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
+          
           {dataSekolah.map((sekolah, index) => (
             <Marker
               key={sekolah.id}

@@ -22,7 +22,7 @@ const Navbar = () => {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-              <Link to="/">Beranda</Link>
+              <Link to="/">Peta Sekolah</Link>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
