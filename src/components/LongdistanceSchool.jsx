@@ -59,7 +59,7 @@ const LongdistanceSchool = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row gap-5 items-center px-5 md:px-20">
+    <div className="flex flex-col md:flex-row gap-5 items-center">
       <div className="flex-1 flex-col flex items-center justify-center pt-5">
         <MapContainer center={[-8.101820370932009, 112.27687703867429]} zoom={13} className="h-[300px] w-[100%] md:h-[500px] rounded-2xl" onClick={handleClick}>
           <TileLayer
