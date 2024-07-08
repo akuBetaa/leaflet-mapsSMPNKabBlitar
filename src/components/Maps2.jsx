@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { dataSekolah } from '@/lib/data';
-import { haversineDistance } from '@/lib/haversine';
+import { dataSekolah } from "@/lib/data";
 import L from "leaflet";
 
 const greenIcon = new L.Icon({
